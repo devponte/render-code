@@ -1,5 +1,5 @@
 {
-    "BaseUrl": "http://www.pekora.zip",
+    "BaseUrl": "http://127.0.0.1",
     "RCCUrl": "http://127.0.0.1",
     "Debug": true,
     "Ports": {

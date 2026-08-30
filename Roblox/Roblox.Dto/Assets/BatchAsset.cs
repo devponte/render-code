@@ -1,2 +1,0 @@
-namespace Roblox.Dto.Assets;
-
