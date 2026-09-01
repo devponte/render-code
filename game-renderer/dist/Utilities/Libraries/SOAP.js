@@ -1,3 +1,5 @@
+//modified by devponte
+//i just changed line 19-21
 import { v4 as uuidv4 } from "uuid";
 export const SOAP = (baseUrl, jobExpiration, finalScript) => {
     // REQUIRES leading slash (for some reason)
@@ -14,8 +16,8 @@ export const SOAP = (baseUrl, jobExpiration, finalScript) => {
          <rob:script>
             <rob:name>${uuidv4().toString()}</rob:name>
             <rob:script><![CDATA[
-                ${finalScript}
-            ]]></rob:script>
+${finalScript}
+]]></rob:script>
             ${ /*<arguments>
         {Arguments}
     </arguments>*/null}
