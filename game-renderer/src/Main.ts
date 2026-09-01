@@ -7,7 +7,6 @@ import PlayerController from "./Controllers/PlayerController.js";
 import ImageController from "./Controllers/ImageController.js";
 import CatalogController from "./Controllers/CatalogController.js";
 import PlaceController from "./Controllers/PlaceController.js";
-import AvatarController from "./Controllers/AvatarController.js";
 
 const App = express();
 const ProcessPort = Config.Ports.Process;
@@ -21,7 +20,7 @@ App.use("/player", PlayerController);
 App.use("/image", ImageController);
 App.use("/catalog", CatalogController);
 App.use("/game", PlaceController);
-App.use("/v1.1", AvatarController);
+//add v1.1??? idk if thats the only way
 
 App.get("/", (_, res) => {
     return res.status(200).send("PEKAPEKA OK!");
