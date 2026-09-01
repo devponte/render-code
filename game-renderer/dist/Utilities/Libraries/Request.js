@@ -1,3 +1,5 @@
+//modified by devponte
+//just to fix a line with a stringify bug
 import axios from "axios";
 import { SOAP } from "./SOAP.js";
 import Config from "./Config.js";
@@ -29,7 +31,31 @@ export const RCCRequest = async (port, data, jobExpiration) => {
         const headers = {
             "Content-Type": "text/xml",
         };
-        const xml = SOAP(Config.BaseUrl, jobExpiration, JSON.stringify(data));
+        //const xml = SOAP(Config.BaseUrl, jobExpiration, JSON.stringify(data));
+        const luaArgs = data.Settings.Arguments.map((arg) => {
+            if (typeof arg === 'string') {
+                return `"${arg.replace(/"/g, '\\"')}"`;
+            }
+            return arg;
+        }).join(', ');
+        const luaScript = `
+            baseUrl, characterAppearanceUrl, fileExtension, x, y = ${luaArgs}
+            pcall(function() game:GetService("ContentProvider"):SetBaseUrl(baseUrl) end)
+            game:GetService("ScriptContext").ScriptsDisabled = true
+            local player = game:GetService("Players"):CreateLocalPlayer(0)
+            player.CharacterAppearance = characterAppearanceUrl
+            player:LoadCharacterBlocking()
+            local character = player.Character
+            if character then
+            local humanoid = character:FindFirstChildOfClass("Humanoid")
+            if humanoid and humanoid.RigType == Enum.HumanoidRigType.R6 then
+                local tool = character:FindFirstChildOfClass("Tool")
+                if tool then character.Torso["Right Shoulder"].CurrentAngle = math.rad(90) end
+            end
+            end
+            return game:GetService("ThumbnailGenerator"):Click(fileExtension, x, y, true)
+        `;
+        const xml = SOAP(Config.BaseUrl, jobExpiration, luaScript);
         const response = await axios.request({
             method: HttpMethod.POST,
             url: `${Config.RCCUrl}:${port}`,

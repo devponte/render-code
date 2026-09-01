@@ -20,7 +20,25 @@ App.use("/player", PlayerController);
 App.use("/image", ImageController);
 App.use("/catalog", CatalogController);
 App.use("/game", PlaceController);
-//add v1.1??? idk if thats the only way
+// added this endpoint
+App.get("/v1.1/avatar-fetch", (req, res) => {
+    const userId = req.query.userId || 1;
+    const avatarData = {
+        solve: true,
+        playerAvatarType: "R6",
+        bodyColors: {
+            headColorId: 24,
+            torsoColorId: 23,
+            leftArmColorId: 23,
+            rightArmColorId: 23,
+            leftLegColorId: 24,
+            rightLegColorId: 24
+        },
+        scales: { height: 1, width: 1 },
+        assets: []
+    };
+    return res.json(avatarData);
+});
 
 App.get("/", (_, res) => {
     return res.status(200).send("PEKAPEKA OK!");
