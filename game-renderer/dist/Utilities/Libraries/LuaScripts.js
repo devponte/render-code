@@ -1,12 +1,5 @@
 //added by devponte
-
-export const GenerateAvatarLuaScript = (
-    baseUrl: string,
-    characterAppearanceUrl: string,
-    fileExtension: string,
-    x: number,
-    y: number
-): string => {
+export const GenerateAvatarLuaScript = (baseUrl, characterAppearanceUrl, fileExtension, x, y) => {
     return `
 -- Avatar_R15_Action v1.1.0
 -- For R6, this generates the normal with/without gear pose.  For R15 it positions their body in an action pose.

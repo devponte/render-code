@@ -17,6 +17,7 @@ router.get("/avatar-fetch", async (req, res) => {
         
         // Return proper avatar data structure that RCC's LoadCharacterBlocking expects
         // This matches the Roblox CharacterAppearance API format
+        // just an example
         const avatarData = {
             solve: true,
             playerAvatarType: "R6",

@@ -1,8 +1,7 @@
-//modified by devponte
-
 import axios from "axios";
 import {SOAP} from "./SOAP.js";
 import Config from "./Config.js";
+import {BaseJson} from "../../Controllers/BaseController.js";
 import {Console} from "./CS.js";
 
 export const HttpRequest = async <T>(method: HttpMethod, url: URL, data: any): Promise<T> => {
@@ -27,12 +26,12 @@ export const HttpRequest = async <T>(method: HttpMethod, url: URL, data: any): P
     }
 };
 
-export const RCCRequest = async <T>(port: number, luaScript: string, jobExpiration: number): Promise<T> => {
+export const RCCRequest = async <T>(port: number, data: BaseJson, jobExpiration: number): Promise<T> => {
     try {
         const headers = {
             "Content-Type": "text/xml",
         };
-        const xml = SOAP(Config.BaseUrl, jobExpiration, luaScript);
+        const xml = SOAP(Config.BaseUrl, jobExpiration, JSON.stringify(data));
         const response = await axios.request({
             method: HttpMethod.POST,
             url: `${Config.RCCUrl}:${port}`,
@@ -48,6 +47,7 @@ export const RCCRequest = async <T>(port: number, luaScript: string, jobExpirati
                 return e.response as T;
             }
         }
+        //throw new Error(e);
         Console.Error(`Error occurred while requesting to RCC: ${e.message}`);
         return null as T;
     }

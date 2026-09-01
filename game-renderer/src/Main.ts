@@ -1,4 +1,4 @@
-//modified by devponte
+//modifed by devponte
 
 import express from "ultimate-express";
 import Config from "./Utilities/Libraries/Config.js";
@@ -7,7 +7,7 @@ import PlayerController from "./Controllers/PlayerController.js";
 import ImageController from "./Controllers/ImageController.js";
 import CatalogController from "./Controllers/CatalogController.js";
 import PlaceController from "./Controllers/PlaceController.js";
-import AvatarController from "./Controllers/AvatarController.js"; //added
+import AvatarController from "./Controllers/AvatarController.js";
 
 const App = express();
 const ProcessPort = Config.Ports.Process;
