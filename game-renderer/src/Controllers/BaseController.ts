@@ -1,6 +1,8 @@
+//modified by devponte
+
 import {Request, Response} from "ultimate-express";
 import {PlayerRenderRequest} from "../Utilities/Dto/Catalog.js";
-import {RCCRequest, SOAPEnvelope, SOAPEnvelope2} from "../Utilities/Libraries/Request.js";
+import {RCCRequest} from "../Utilities/Libraries/Request.js";
 import xml2js from "xml2js";
 import {Console} from "../Utilities/Libraries/CS.js";
 import Resp from "../Utilities/Libraries/Resp.js";
@@ -8,14 +10,14 @@ import Resp from "../Utilities/Libraries/Resp.js";
 export const RequestRCCBase = async (
     req: Request,
     res: Response,
-    xml: BaseJson,
+    luaScript: string,
     port: number,
     type: string,
     envelopeType?: number
 ) => {
     const request: any = req.body;
 
-    const response: any = await RCCRequest(port, xml, request.jobExpiration);
+    const response: any = await RCCRequest(port, luaScript, request.jobExpiration);
     try {
         let xmlData: string;
         let result: any = (await xml2js.parseStringPromise(response, {explicitArray: false}))["SOAP-ENV:Envelope"];
@@ -26,11 +28,10 @@ export const RequestRCCBase = async (
             xmlData = result.Body.BatchJobResponse.BatchJobResult[0].value;
         }
         Console.Log(`&aRendered &lsuccessfully&r&a on port &l${port}&r with UserId &l${request.userId}&r, &lAssetId ${request.assetId}&r.`);
-        // return res.status(200).set("Content-Type", "image/png").send(Buffer.from(xmlData, "base64"));
         return Resp(res, 200, "success", true, {data: xmlData});
     } catch (e: any) {
         if (e.message.startsWith("Non-whitespace before first tag.")) {
-            Console.Error(`${type} render with &c&lUserId ${request.userId}&r, &c&lAssetId ${request.assetId}&r on &c&lport ${port}&r failed with the following error message, likely due to a malformed XML provided to RCC: \n${e.message}`);
+            Console.Error(`${type} render with &c&lUserId ${request.userId}&r, &c&lAssetId ${request.assetId}&r on &c&lport ${port}&r failed with the following error message, likely due to a malformed XML provided to RCC: ${e.message}`);
         } else {
             Console.Error(`${type} render with &c&lUserId ${request.userId}&r, &c&lAssetId ${request.assetId}&r on &c&lport ${port}&r failed with the following error message: \n${e.message}`);
         }
@@ -41,14 +42,14 @@ export const RequestRCCBase = async (
 export const RequestRCCBaseXMLData = async (
     req: Request,
     res: Response,
-    xml: BaseJson,
+    luaScript: string,
     port: number,
     type: string,
     envelopeType?: number
 ): Promise<any> => {
     const request: any = req.body;
 
-    const response: any = await RCCRequest(port, xml, request.jobExpiration);
+    const response: any = await RCCRequest(port, luaScript, request.jobExpiration);
     try {
         let xmlData;
         let result: any = (await xml2js.parseStringPromise(response, {explicitArray: false}))["SOAP-ENV:Envelope"];
@@ -66,7 +67,7 @@ export const RequestRCCBaseXMLData = async (
         return xmlData;
     } catch (e: any) {
         if (e.message.startsWith("Non-whitespace before first tag.")) {
-            Console.Error(`${type} render with &c&lUserId ${request.userId}&r, &c&lAssetId ${request.assetId}&r on &c&lport ${port}&r failed with the following error message, likely due to a malformed XML provided to RCC: \n${e.message}`);
+            Console.Error(`${type} render with &c&lUserId ${request.userId}&r, &c&lAssetId ${request.assetId}&r on &c&lport ${port}&r failed with the following error message, likely due to a malformed XML provided to RCC: ${e.message}`);
         } else {
             Console.Error(`${type} render with ${request.userId}&r, &c&lAssetId ${request.assetId}&r on &c&lport ${port}&r failed with the following error message: \n${e.message}`);
         }
@@ -97,4 +98,25 @@ function CleanXmlJson(obj: any): any {
         return newObj;
     }
     return obj;
+}
+
+export class SOAPEnvelope {
+    Header?: any;
+    Body!: {
+        BatchJobResponse: {
+            BatchJobResult: Array<{ type: string; value?: string }>;
+        };
+    };
+}
+
+export class SOAPEnvelope2 {
+    Header?: any;
+    Body!: {
+        BatchJobResponse: {
+            BatchJobResult: {
+                type: string;
+                value?: string;
+            };
+        };
+    };
 }
