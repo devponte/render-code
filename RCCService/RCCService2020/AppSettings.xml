@@ -2,4 +2,13 @@
 <Settings>
 	<ContentFolder>content</ContentFolder>
 	<BaseUrl>http://127.0.0.1</BaseUrl>
+	<Port>64989</Port>
+	<Settings key="Player">
+	</Settings>
+	<Settings key="Image">
+	</Settings>
+	<Settings key="Game">
+	</Settings>
+	<Settings key="Catalog">
+	</Settings>
 </Settings>

@@ -1,7 +1,7 @@
 @echo off
 :loop
 echo "Starting Player Render RCC"
-RCCService.exe -console -verbose -port 1621
+RCCService.exe -console -verbose -port 64989 -settingspath AppSettings.xml -settingskey Player
 echo Restarting this RCC, Control+C to cancel restart!
 timeout 10
 echo (%time%) Restarting RCC!
