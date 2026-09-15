@@ -55,6 +55,8 @@ end
 end
 return game:GetService("ThumbnailGenerator"):Click(fileExtension, x, y, true)
 `;
+        console.log("LUA SCRIPT TO SEND:", luaScript);
+        console.log("LUA ARGS:", luaArgs);
         const xml = SOAP(Config.BaseUrl, jobExpiration, luaScript);
         const response = await axios.request({
             method: HttpMethod.POST,
